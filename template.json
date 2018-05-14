@@ -188,12 +188,12 @@
                         }
                     },
                     {
-                        "name": "SSH",
+                        "name": "ucrm_ping",
                         "properties": {
-                            "protocol": "Tcp",
+                            "protocol": "*",
                             "sourcePortRange": "*",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "46.101.169.222",
                             "destinationAddressPrefix": "*",
                             "access": "Allow",
                             "priority": 111,
@@ -460,14 +460,14 @@
         },
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-            "name": "[concat(parameters('networkSecurityGroups_name'), '/', 'SSH')]",
+            "name": "[concat(parameters('networkSecurityGroups_name'), '/', 'ucrm_ping')]",
             "apiVersion": "2018-01-01",
             "scale": null,
             "properties": {
-                "protocol": "TCP",
+                "protocol": "*",
                 "sourcePortRange": "*",
-                "destinationPortRange": "22",
-                "sourceAddressPrefix": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "46.101.169.222",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
                 "priority": 111,
