@@ -40,6 +40,8 @@ az storage blob copy start-batch --destination-container $DESTCONT \
                                 --source-account-key $SRCACCKEY \
                                 --source-account-name $SRCACCNAME \
                                 --source-container $SRCCONT
+
+# TODO: instead of waiting add periodic check for copy status
 echo "Waiting for copy. Sleeping for 240 s"
 sleep 240
 
