@@ -41,16 +41,37 @@ az storage blob copy start-batch --destination-container $DESTCONT \
                                 --source-account-name $SRCACCNAME \
                                 --source-container $SRCCONT
 
-# TODO: instead of waiting add periodic check for copy status
-echo "Waiting for copy. Sleeping for 240 s"
-sleep 240
+echo "Waiting for copy...Check if copy is over every 10 sec..."
+echo "Start time: `date +%H:%M:%S`"
+sleep 10
+
+OSDISKNAME="$(az storage blob list --container-name $DESTCONT --account-key $ACCKEY --account-name $ACCNAME --query [].[name][0] -o tsv)"
+DATADISK1NAME="$(az storage blob list --container-name $DESTCONT --account-key $ACCKEY --account-name $ACCNAME --query [].[name][1] -o tsv)"
+DATADISK2NAME="$(az storage blob list --container-name $DESTCONT --account-key $ACCKEY --account-name $ACCNAME --query [].[name][2] -o tsv)"
+
+while [ '"success"' != $(az storage blob show --account-name ${ACCNAME} --account-key ${ACCKEY} -c ${DESTCONT} -n ${OSDISKNAME} --query properties.copy.status) ]
+do
+sleep 10
+done
+
+while [ '"success"' != $(az storage blob show --account-name ${ACCNAME} --account-key ${ACCKEY} -c ${DESTCONT} -n ${DATADISK1NAME} --query properties.copy.status) ]
+do
+sleep 10
+done
+
+while [ '"success"' != $(az storage blob show --account-name ${ACCNAME} --account-key ${ACCKEY} -c ${DESTCONT} -n ${DATADISK2NAME} --query properties.copy.status) ]
+do
+sleep 10
+done
+
+echo "Finish time: `date +%H:%M:%S`"
 
 # deploy VM
 echo "Start deployment..."
 
-OSDISK="https://"$ACCNAME".blob.core.windows.net/"$DESTCONT"/"$(az storage blob list --container-name $DESTCONT --account-key $ACCKEY --account-name $ACCNAME --query [].[name][0] -o tsv)
-DATADISK1="https://"$ACCNAME".blob.core.windows.net/"$DESTCONT"/"$(az storage blob list --container-name $DESTCONT --account-key $ACCKEY --account-name $ACCNAME --query [].[name][1] -o tsv)
-DATADISK2="https://"$ACCNAME".blob.core.windows.net/"$DESTCONT"/"$(az storage blob list --container-name $DESTCONT --account-key $ACCKEY --account-name $ACCNAME --query [].[name][2] -o tsv)
+OSDISK="https://"$ACCNAME".blob.core.windows.net/"$DESTCONT"/"$OSDISKNAME
+DATADISK1="https://"$ACCNAME".blob.core.windows.net/"$DESTCONT"/"$DATADISK1NAME
+DATADISK2="https://"$ACCNAME".blob.core.windows.net/"$DESTCONT"/"$DATADISK2NAME
 
 az group deployment create \
     --name "ExampleDeployment" \
