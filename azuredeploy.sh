@@ -3,6 +3,11 @@
 # login to customer account
 az login
 
+# Select subscription name or ID
+SUBSCRIPTION="Visual Studio Professional"
+
+az account set -s $SUBSCRIPTION
+
 # all contents of source container will be copied
 # destination container, destination account name, destination account key
 DESTCONT="vhds"
