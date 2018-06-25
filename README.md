@@ -16,6 +16,7 @@ SRCACCKEY="source accout key"
 SRCACCNAME="source account name"  
 SRCCONT="source container name"
 
+Select correct subscription.  
 In addition you can change location, resourse group name and deployment name.
 # Requirements
 Azure CLI 2.0
